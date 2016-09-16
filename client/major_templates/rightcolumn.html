@@ -1,0 +1,33 @@
+<template name="rightcolumn">
+    <div class="col-xs-10">
+        <h2>{{getListTitle}}</h2>
+
+        {{#if currentUser}}
+        <form>
+        <div class="form-group">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <input class="form-control" type="text" id="itemInput" placeholder="Type new Ticket Item here">
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default" type="submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        {{else}}
+            *-- Please Login to create tickets --*
+        {{/if}}
+
+        <br>
+        <br>
+
+        <ul class="list-group">
+            {{#each getListEntries}}
+               <li class="list-group-item"> {{entryNote}} --- Created At: {{createdAt}} </li>
+            {{/each}}
+        </ul>
+    </div>
+</template>
