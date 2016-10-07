@@ -11,9 +11,8 @@ Template.newListModal.events({
         else
         {
             console.log(newListName);
-            TicketStore.insert({
+            TicketListStore.insert({
                 listname: newListName,
-                listentries: [],
                 createdAt: new Date(),
                 createdBy: user
             });

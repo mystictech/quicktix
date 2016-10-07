@@ -1,16 +1,16 @@
 Template.leftcolumn.helpers({
     getLists: function() {
-        var lists = TicketStore.find().fetch();
+        var lists = TicketListStore.find().fetch();
         return lists;
     }
 });
 
 
 Template.leftcolumn.events({
-    'click .listName': function(event){
-        var lastid = this._id;
-        console.log(lastid);
-        Session.set('selectedList', lastid);
+    'click .listName': function(){
+        var listid = this._id;
+        console.log(listid);
+        Session.set('selectedList', listid);
     },
     'click #addList': function(){
         $('#newlistError').html('');

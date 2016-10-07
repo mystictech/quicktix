@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<template name="ticketentry">
+    <li class="list-group-item">
+        <div class="container">
+            <div class="row" style="text-align: center;">
+                <div class="col-xs-1" style="font-size: x-large;">{{increment}}</div>
+                <div class="col-xs-5 entryWrapper {{isChecked}}">
+                    <strong style="font-size: 1.5em;">{{entryNote}}</strong>
+                    <div class="tooltip">
+                        BY: {{createdBy}} | WHEN: {{createdAt}}
+                    </div>
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                    <select name="priority" id="priorityselect" style="background-color: {{priorityColor}};">
+                        <option value="none">None</option>
+                        <option value="high" style="background-color: red;">High</option>
+                        <option value="moderate" style="background-color: yellow;">Moderate</option>
+                        <option value="low" style="background-color: lawngreen;">Low</option>
+                    </select>
+                </div>
+                {{#if currentUser}}<div class="col-xs-1" style="text-align: center;"><a class="addcomment" href="#"><i class="fa fa-comments-o"></i> Reply</a></div>{{else}}<div class="col-xs-1"><label style="text-align: center;">login</label></div>{{/if}}
+                {{#if currentUser}}<div class="col-xs-1" style="text-align: center;"><a href="#"><i class="fa fa-pencil"></i></a></div>{{/if}}
+                {{#if currentUser}}<div class="col-xs-1" style="text-align: center;"><a href="#"><i class="fa fa-trash-o"></i></a></div>{{/if}}
+                {{#if currentUser}}<div class="col-xs-1" style="text-align: center;"><input type="checkbox" value="{{_id}}" class="doneCheck" {{isChecked}}></div>{{/if}}
+            </div>
+                {{#each this.replies}}
+                <div class="row" style="margin: 5px;">
+                            <div class="col-xs-2"><img src="arrow.png" style="width: 25px; float:right; margin-right: -15px;"></div>
+                            <div class="col-xs-10">
+                                <div class="list-group">
+                                    <div class="list-group-item" style="margin-right: 60px;">
+                                        {{comment}} ---- {{commenter}} @ {{whenstring}}
+                                    </div>
+                                </div>
+                            </div>
+
+                </div>
+                {{/each}}
+            <div class="commentrow row" id="{{_id}}row" style="margin: 15px;">
+                <form>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-10">
+                        <input type="text" id="{{_id}}Input" placeholder="   write comment here" style="width: 50%; border: solid;">
+                        <input type="button" value="Submit" class="commentSubmit">
+                        <input type="button" value="x" aria-label="Close" class="cancelcomment">
+
+                        <!--<button type="button" class="close" aria-label="Close">x</button>-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </li>
+</template>

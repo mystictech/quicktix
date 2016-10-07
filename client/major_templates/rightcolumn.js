@@ -2,16 +2,29 @@ Template.rightcolumn.helpers({
     getListTitle: function () {
         const selectedList = Session.get('selectedList');
         if (!selectedList){
-            return ("Pick a Ticket list");
+            return ("...Create or Choose a Ticket list on the left...");
         }
         else{
-            return TicketStore.findOne({_id: selectedList}).listname;
+            return TicketListStore.findOne({_id: selectedList}).listname;
         }
     },
 
     getListEntries: function(){
         const selectedList = Session.get('selectedList');
-        return TicketStore.findOne({_id: selectedList}).listentries;
+        if (selectedList != null) {
+            return TicketStore.find({listid: selectedList, completed: false}, { sort: {createdAt: -1}});
+        }
+    },
+    doneListEntries: function(){
+        const selectedList = Session.get('selectedList');
+        if (selectedList != null) {
+            return TicketStore.find({listid: selectedList, completed: true}, { sort: {createdAt: -1}});
+        }
+    },
+    checked: function(){
+        var isCompleted = this.completed;
+        if(isCompleted) { return "checked"; }
+        else {return "";}
     }
 });
 
@@ -20,12 +33,27 @@ Template.rightcolumn.events({
     'submit form': function(event){
         event.preventDefault();
         var iteminput = event.target.itemInput.value;
-        const selectedList = Session.get('selectedList');
-        TicketStore.update({_id: selectedList}, {$push: {listentries: {
-            entryNote: iteminput,
-            createdAt: new Date(),
-            createdBy: "anonymous"
-        }}});
-        event.target.value = "";
+        if (iteminput == null || iteminput == ""){
+            toastr.warning("Can't create empty ticket.");
+        }
+        else {
+            const selectedList = Session.get('selectedList');
+            var username = Meteor.users.findOne({'_id': Meteor.userId() }).username;
+            var thistime = (new Date()).toLocaleDateString() + " @ " + (new Date()).toLocaleTimeString();
+            var priority = "none";
+            var increment = TicketStore.find({listid: selectedList}).count() + 1;
+            TicketStore.insert({
+                listid: selectedList,
+                increment: increment,
+                priority: priority,
+                entryNote: iteminput,
+                createdAt: thistime,
+                createdBy: username,
+                completed: false,
+                replies: []
+            });
+            toastr.success("Ticket created successfully.")
+            event.target.itemInput.value = "";
+        }
     }
 });

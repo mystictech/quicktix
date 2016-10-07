@@ -20,8 +20,15 @@ Template.createUserModal.events({
                 email: emailVar,
                 password: pwdVar,
                 username: usernameVar,
-                role: roleVar,
-                profile: {}
+                profile:
+                {
+                    'role': roleVar
+                }
+            }, function (e){
+                if(e){console.log(e);}
+                /**else{
+                    ProfileStore.insert({userId: r, role: roleVar, profile: {}});
+                }**/
             });
 
             $('#createUserModal').modal("hide");
