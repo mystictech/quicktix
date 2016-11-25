@@ -1,9 +1,11 @@
 Template.newListModal.events({
     'click #createTicketList': function (){
-        var user;
-        if (!this.userId){ user ='anonymous';}
-        else{ user = Meteor.userId()};
+        var userID = Meteor.userId();
+
+        if (userID == null){ user ='anonymous';}        
+
         var newListName = $('#newlistName').val();
+
         if(newListName == null  || newListName == "")
         {
             $('#newlistError').html("Can't be empty!");
@@ -14,7 +16,9 @@ Template.newListModal.events({
             TicketListStore.insert({
                 listname: newListName,
                 createdAt: new Date(),
-                createdBy: user
+                createdBy: userID,
+                owners: [userID],
+                private: false
             });
             $('#newlistName').val('');
             $("#newListModal").modal("hide");

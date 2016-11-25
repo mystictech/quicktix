@@ -6,8 +6,16 @@
         <br>
         <br>
         <ul style="list-style-type: none;">
+            {{#if currentUser}}
+            <li class="listheader">My Lists</li>            
+            {{#each getMyLists}}
+                <li class="listName"><a href="#">{{listname}}</a> <span class="pull-right label label-danger">{{getUndoneCount}}</span> </li>
+            {{/each}}
+            {{/if}}
+
+            <li class="listheader">Public Lists</li>
             {{#each getLists}}
-                <li class="listName"><a href="#">{{listname}}</a></li>
+                <li class="listName"><a href="#">{{listname}}</a> <span class="pull-right label label-danger">{{getUndoneCount}}</span> </li>
             {{/each}}
         </ul>
     </div>

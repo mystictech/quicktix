@@ -8,7 +8,6 @@ Template.rightcolumn.helpers({
             return TicketListStore.findOne({_id: selectedList}).listname;
         }
     },
-
     getListEntries: function(){
         const selectedList = Session.get('selectedList');
         if (selectedList != null) {
@@ -25,7 +24,19 @@ Template.rightcolumn.helpers({
         var isCompleted = this.completed;
         if(isCompleted) { return "checked"; }
         else {return "";}
+    },
+    isPrivate: function(){
+        const selectedList = Session.get('selectedList');
+        if (TicketListStore.findOne({'_id': selectedList}).private == true )
+        {
+            return 'lock';    
+        }
+        else{
+            return 'unlock';
+        }
+        
     }
+    
 });
 
 
@@ -40,7 +51,7 @@ Template.rightcolumn.events({
             const selectedList = Session.get('selectedList');
             var username = Meteor.users.findOne({'_id': Meteor.userId() }).username;
             var thistime = (new Date()).toLocaleDateString() + " @ " + (new Date()).toLocaleTimeString();
-            var priority = "none";
+            var priority = "0";
             var increment = TicketStore.find({listid: selectedList}).count() + 1;
             TicketStore.insert({
                 listid: selectedList,
@@ -55,5 +66,21 @@ Template.rightcolumn.events({
             toastr.success("Ticket created successfully.")
             event.target.itemInput.value = "";
         }
+    },
+    'click #titlePrivate': function()
+    {        
+        var thisid = Session.get('selectedList');        
+        var privacystatus = TicketListStore.findOne({_id: thisid}).private;
+        console.log(thisid + " has privacy that is " + privacystatus);
+        if (privacystatus == true)
+        {
+            TicketListStore.update({'_id': thisid}, { $set: {'private': false}});
+        }
+        else if (privacystatus == false)
+        { 
+            TicketListStore.update({'_id': thisid}, { $set: {'private': true}});
+        }
+        
+        
     }
 });

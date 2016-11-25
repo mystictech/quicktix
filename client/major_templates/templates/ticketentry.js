@@ -6,18 +6,20 @@ Template.ticketentry.helpers({
     },
 
     'priorityColor': function(){
-        var selectedPrior = $("#priorityselect").val();
-        if (selectedPrior == "none"){
+        var docId = this._id;
+        //var selectedPrior = $("#priorityselect").val();
+        var selectedPrior = TicketStore.findOne({_id: docId}).priority;
+        if (selectedPrior == "0"){
             return "white";
         }
-        if (selectedPrior == "high"){
-            return "red";
+        if (selectedPrior == "1"){
+            return "lawngreen";
         }
-        if (selectedPrior == "moderate"){
+        if (selectedPrior == "2"){
             return "yellow";
         }
-        if (selectedPrior == "low"){
-            return "lawngreen";
+        if (selectedPrior == "3"){
+            return "red";
         }
     }
 });
@@ -61,11 +63,13 @@ Template.ticketentry.events({
                     commenter: username,
                     when: thistime,
                     whenstring: thistimeString,
+                    completed: false
                 }
             }
         });
         var divid = "#" + (this._id) + "row";
         $(divid).attr('class', 'commentrow row');
+        $(inputid).val('');
     },
 
     'click .cancelcomment': function()
@@ -87,7 +91,7 @@ Template.ticketentry.events({
     'change #priorityselect': function(event){
         var priorityval = (event.target).value;
         console.log(this._id + " to priority " + priorityval);
-        TicketStore.upsert({_id: this._id}, {$set: {priority: priorityval}});
+        TicketStore.update({_id: this._id}, {$set: {priority: priorityval}});
     }
 
 
